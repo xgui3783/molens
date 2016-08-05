@@ -12,6 +12,7 @@ var childProcess 	= require('child_process')
 var storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		var newDir = app.get('persistentDataDir')+String(Date.now())+'/';
+		req.dateNow = String(Date.now());
 		fs.mkdir(newDir,function(e){
 			if(!e || e && e.code =='EEXIST'){
 				cb(null,newDir)
@@ -27,10 +28,8 @@ var storage = multer.diskStorage({
 var upload	= multer({storage : storage});
 
 app.post('/osr',upload.single('photo'),function(req,res){
-	var molfile = req.file.destination+'mol.mol';
-	console.log(req.file.path);
-	console.log(req.file.destination);
-	var child = childProcess.execFile('./public/imago_console',['./'+req.file.path,'-o',req.file.destination+'mol.mol'],
+	var dir = app.get('persistentDataDir')+req.dateNow+'/';
+	var child = childProcess.execFile('./public/imago_console',[dir+req.file.originalname,'-o',dir+'mol.mol'],
 		function(e,stdout,stderr){
 			if(e){
 				res.send({error:e})
@@ -72,8 +71,8 @@ app.get('/test',function(req,res){
 	res.sendfile('upload.html')
 })
 
-//app.set('persistentDataDir',process.env.OPENSHIFT_DATA_DIR||'./public/');
-app.set('persistentDataDir','./public/');
+app.set('persistentDataDir',process.env.OPENSHIFT_DATA_DIR||'./public/');
+//app.set('persistentDataDir','./public/');
 
 app.set('port', process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3002 );
 app.set('ip', process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1");
