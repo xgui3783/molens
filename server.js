@@ -27,6 +27,19 @@ var storage = multer.diskStorage({
 })
 var upload	= multer({storage : storage});
 
+app.get('/osrtest',function(req,res){
+	var child = childProcess.execFile('./public/imago_console',['./public/structure.png'],
+		function(e,stdout,stderr){
+			if(e){
+				res.send({error:e})
+			}else if(stderr){
+				res.send({error:stderr})
+			}else{
+				res.send('done')
+			}
+		})
+})
+
 app.post('/osr',upload.single('photo'),function(req,res){
 	var dir = app.get('persistentDataDir')+req.dateNow+'/';
 	var child = childProcess.execFile('./public/imago_console',[dir+req.file.originalname,'-o',dir+'mol.mol'],
