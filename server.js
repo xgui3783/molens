@@ -42,6 +42,7 @@ app.get('/osrtest',function(req,res){
 
 app.post('/osr',upload.single('photo'),function(req,res){
 	var dir = app.get('persistentDataDir')+req.dateNow+'/';
+	console.log(dir);
 	var child = childProcess.execFile('./public/imago_console',[dir+req.file.originalname,'-o',dir+'mol.mol'],
 		function(e,stdout,stderr){
 			if(e){
