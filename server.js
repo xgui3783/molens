@@ -30,7 +30,7 @@ app.post('/osr',upload.single('photo'),function(req,res){
 	var molfile = req.file.destination+'mol.mol';
 	console.log(req.file.path);
 	console.log(req.file.destination);
-	var child = childProcess.execFile('./public/imago_console',[req.file.path,'-o',req.file.destination+'mol.mol'],
+	var child = childProcess.execFile('./public/imago_console',['./'+req.file.path,'-o',req.file.destination+'mol.mol'],
 		function(e,stdout,stderr){
 			if(e){
 				res.send({error:e})
