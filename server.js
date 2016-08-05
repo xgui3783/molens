@@ -28,7 +28,7 @@ var storage = multer.diskStorage({
 var upload	= multer({storage : storage});
 
 app.get('/osrtest',function(req,res){
-	var child = childProcess.execFile('./public/imago_console',['./public/structure.png'],
+	var child = childProcess.execFile(app.get('persistentDataDir')+'imago_console',[app.get('persistentDataDir')+'structure.png'],
 		function(e,stdout,stderr){
 			if(e){
 				res.send({error:e})
