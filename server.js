@@ -43,6 +43,7 @@ app.get('/osrtest',function(req,res){
 app.post('/osr',upload.single('photo'),function(req,res){
 	var dir = app.get('persistentDataDir')+req.dateNow+'/';
 	console.log(dir);
+	console.log(req.file.originalname);
 	var child = childProcess.execFile('./public/imago_console',[dir+req.file.originalname,'-o',dir+'mol.mol'],
 		function(e,stdout,stderr){
 			if(e){
@@ -85,10 +86,10 @@ app.get('/test',function(req,res){
 	res.sendfile('upload.html')
 })
 
-app.set('persistentDataDir',process.env.OPENSHIFT_DATA_DIR||'./public/');
+app.set('persistentDataDir',process.env.OPENSHIFT_DATA_DIR || process.env.DATA_DIR ||'./public/');
 //app.set('persistentDataDir','./public/');
 
 app.set('port', process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3002 );
-app.set('ip', process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1");
+app.set('ip', process.env.OPENSHIFT_NODEJS_IP || process.env.IP || "127.0.0.1");
 
 server.listen(app.get('port'),app.get('ip'));
